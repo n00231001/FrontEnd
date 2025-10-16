@@ -24,9 +24,9 @@ export default function SingleCountry(){
     console.log(country.currencies["EGP"]);
     console.log(Object.keys(country.currencies));
 
-    let currencies = Object.keys(country.currencies).map(currency => {
+    let currencies = Object.keys(country.currencies).map((currency, i) => {
         return (
-            <p>
+            <p key={i}>
                 <b>Code: </b> {currency} <br/>
                 <b>Name: </b> {country.currencies[currency].name}
                 <b>Symbol: </b> {country.currencies[currency].symbol}
