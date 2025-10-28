@@ -1,3 +1,4 @@
+// ...existing code...
 import { useState, useEffect } from 'react';
 import './styles/App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -8,6 +9,7 @@ import Navbar from './components/Navbar';
 // Import pages
 import Home from './pages/Home';
 import SingleMeal from './pages/SingleMeal';
+import SingleCountry from './pages/SingleCountry';
 
 export default function App() {
   const [query, setQuery] = useState('');
@@ -43,10 +45,13 @@ export default function App() {
       <Routes>
         {/* 🏠 Home Page (displays meals) */}
         <Route path="/" element={<Home meals={meals} />} />
+
+        {/* 🔎 Single country route (added) */}
+        <Route path="/country/:name" element={<SingleCountry />} />
+
         {/* 🍳 Single meal details */}
         <Route path="/meal/:id" element={<SingleMeal />} />
       </Routes>
     </Router>
   );
 }
-

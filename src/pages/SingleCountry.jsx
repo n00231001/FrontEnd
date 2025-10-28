@@ -1,6 +1,7 @@
 import { useEffect, useState} from 'react';
 import { useParams } from 'react-router';
 import axios from 'axios';
+import SingleMeal from './SingleMeal';
 
 export default function SingleCountry(){
     const {name} = useParams();
@@ -24,6 +25,8 @@ export default function SingleCountry(){
     console.log(country.currencies["EGP"]);
     console.log(Object.keys(country.currencies));
 
+
+    
     let currencies = Object.keys(country.currencies).map((currency, i) => {
         return (
             <p key={i}>
