@@ -44,8 +44,9 @@ export default function Home ({ query}) {
     return (
         <div>
             <h1>Home</h1>
-            
+            <div class="bg-red">
             {countryCards}
+            </div>
         </div>
     );
 };    
