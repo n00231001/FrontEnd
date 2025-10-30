@@ -1,4 +1,3 @@
-// ...existing code...
 import { useState, useEffect } from 'react';
 import './styles/App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -20,7 +19,7 @@ export default function App() {
     const fetchMeals = async () => {
       try {
         const endpoint = query
-          ? `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+          ? `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`
           : 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 
         const response = await fetch(endpoint);
@@ -34,19 +33,15 @@ export default function App() {
     fetchMeals();
   }, [query]);
 
-  // 🟡 Handle search input
-  const handleChange = (e) => {
-    setQuery(e.target.value);
-  };
-
   return (
     <Router>
-      <Navbar query={query} setQuery={handleChange} />
+      {/* pass the actual setter so Navbar can call setQuery(e.target.value) */}
+      <Navbar query={query} setQuery={setQuery} />
       <Routes>
-        {/* 🏠 Home Page (displays meals) */}
-        <Route path="/" element={<Home meals={meals} />} />
+        {/* pass query into Home so it can filter countries */}
+        <Route path="/" element={<Home query={query} meals={meals} />} />
 
-        {/* 🔎 Single country route (added) */}
+        {/* 🔎 Single country route */}
         <Route path="/country/:name" element={<SingleCountry />} />
 
         {/* 🍳 Single meal details */}

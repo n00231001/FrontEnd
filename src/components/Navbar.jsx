@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = ({query, setQuery}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(query){
+         if (query && query.toString().trim().length > 0) {
             navigate('/');
-        }
+        };
         navigate('/');
     }, [query]);
     return (
@@ -15,14 +15,13 @@ const Navbar = ({query, setQuery}) => {
             <div className="flex w-full flex-col lg:flex-row">
                 <Link to='/' >Home</Link>
                     <div className="divider divider-horizontal"></div>
-                     <form className="form flex flex-wrap items-center gap-2">
-
+                     <form className="form flex flex-nowrap items-center gap-2 overflow-x-auto" onSubmit={(e)=>e.preventDefault()}>
                         <input 
                             type="text" 
                             placeholder="Search country..."
-                            value={query}
-                            onChange={setQuery}
-                            className="input input-bordered input-sm w-full max-w-xs"
+                            value={query ?? ''}
+                            onChange={(e) => setQuery(e.target.value)}
+                            className="input input-bordered input-sm w-auto"
                         />
 
                             <div className="divider divider-horizontal" ></div>

@@ -28,15 +28,7 @@ import singleMeal from '../pages/SingleMeal.jsx';
            <b>Capital: </b> {Array.isArray(capital) ? capital.join(', ') : capital}
          </p>
        </div>
- 
-       {/* View Recipe Button */}
-       <div>
-        <Link
-          to={`/meal/${name}`}
-          className="btn btn-outline btn-primary"
-        >
-          View {name} Meals
-        </Link>
+        <div>
        
        </div>
      </div>
