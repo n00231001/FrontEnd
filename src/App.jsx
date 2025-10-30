@@ -13,6 +13,7 @@ import SingleCountry from './pages/SingleCountry';
 export default function App() {
   const [query, setQuery] = useState('');
   const [meals, setMeals] = useState([]);
+  const [regionFilters, setRegionFilters] = useState([]); // e.g. ['Europe','Asia']
 
   // 🟢 Fetch meals when query changes
   useEffect(() => {
@@ -36,10 +37,10 @@ export default function App() {
   return (
     <Router>
       {/* pass the actual setter so Navbar can call setQuery(e.target.value) */}
-      <Navbar query={query} setQuery={setQuery} />
+      <Navbar query={query} setQuery={setQuery} regionFilters={regionFilters} setRegionFilters={setRegionFilters} />
       <Routes>
         {/* pass query into Home so it can filter countries */}
-        <Route path="/" element={<Home query={query} meals={meals} />} />
+        <Route path="/" element={<Home query={query} meals={meals} regionFilters={regionFilters} />} />
 
         {/* 🔎 Single country route */}
         <Route path="/country/:name" element={<SingleCountry />} />
