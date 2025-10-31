@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import SingleMeal from './SingleMeal';
 
@@ -7,6 +7,7 @@ export default function SingleCountry() {
   const { name } = useParams();
   const [country, setCountry] = useState(null);
   const [meals, setMeals] = useState([]);
+  const [selectedMeal, setSelectedMeal] = useState(null);
   const [loadingMeals, setLoadingMeals] = useState(false);
   const [loadingCountry, setLoadingCountry] = useState(true);
 
@@ -118,24 +119,35 @@ export default function SingleCountry() {
       setLoadingMeals(false);
       return;
     }
-
+  
     setLoadingMeals(true);
     let cancelled = false;
-
+  
     axios
       .get(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(area)}`)
-      .then((response) => {
+      .then(async (response) => {
         if (cancelled) return;
-        setMeals(response.data?.meals || []);
+        const mealList = response.data?.meals || [];
+        setMeals(mealList);
+  
+        // ✅ If there's at least one meal, fetch full details for the first one
+        if (mealList.length > 0) {
+          const firstMealId = mealList[0].idMeal;
+          const mealDetailsRes = await axios.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${firstMealId}`);
+          setSelectedMeal(mealDetailsRes.data.meals ? mealDetailsRes.data.meals[0] : null);
+        } else {
+          setSelectedMeal(null);
+        }
       })
       .catch((error) => {
         if (!cancelled) console.error(error);
-        if (!cancelled) setMeals([]);
+        setMeals([]);
+        setSelectedMeal(null);
       })
       .finally(() => {
         if (!cancelled) setLoadingMeals(false);
       });
-
+  
     return () => {
       cancelled = true;
     };
@@ -148,10 +160,20 @@ export default function SingleCountry() {
 
   return (
     <>
-      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 12 }}>
-        {country.flags?.png && (
-          <img src={country.flags.png} alt={`${country.name?.common} flag`} style={{ width: 180, height: 120, objectFit: 'cover' }} />
-        )}
+    {/* back button */}
+    <Link to="/" className="btn btn-outline btn-primary mb-4">← Back</Link>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, backgroundColor: 'grey', padding: '20px', margin: '50px', borderRadius: '8px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          {/* flags and coat of arms */}
+          {country.flags?.png && (
+            <img src={country.flags.png} alt={`${country.name?.common} flag`} style={{ width: 380, objectFit: 'cover', color: 'red' }} />
+          )}<br></br>
+          {country.coatOfArms?.png && (
+            <img src={country.coatOfArms.png} alt={`${country.name?.common} coat of arms`} style={{ width: 380 }} />
+          )}
+        </div>
+        {/* country info */}
         <div>
           <p>
             <b>Name:</b> {country.name?.official || country.name?.common}
@@ -165,30 +187,50 @@ export default function SingleCountry() {
           <p>
             <b>Population:</b> {country.population ? country.population.toLocaleString() : '—'}
           </p>
+          <div>
+          <section>
+            <br></br>
+            <h3>Currency</h3>
+            {currencyKeys.length ? (
+              currencyKeys.map((code) => {
+                const info = country.currencies[code] || {};
+                return (
+                  <p key={code}>
+                    <b>Code:</b> {code} <br />
+                    <b>Name:</b> {info.name || '—'} <br />
+                    <b>Symbol:</b> {info.symbol || '—'}
+                  </p>
+                );
+              })
+            ) : (
+              <p>No currency data</p>
+            )}
+          </section>
         </div>
-      </div>
-
-      <section>
-        <h3>Currency</h3>
-        {currencyKeys.length ? (
-          currencyKeys.map((code) => {
-            const info = country.currencies[code] || {};
-            return (
-              <p key={code}>
-                <b>Code:</b> {code} <br />
-                <b>Name:</b> {info.name || '—'} <br />
-                <b>Symbol:</b> {info.symbol || '—'}
-              </p>
-            );
-          })
+        </div>
+        {/* single meal */}
+        <div>
+        <h3>Meal</h3>
+        {selectedMeal ? (
+          <div className="card" style={{ padding: 8, maxWidth: 300 }}>
+            <img
+              src={selectedMeal.strMealThumb}
+              alt={selectedMeal.strMeal}
+              style={{ width: '100%', height: 180, objectFit: 'cover', borderRadius: 8 }}
+            />
+            <div style={{ marginTop: 8 }}>
+              <strong>{selectedMeal.strMeal}</strong>
+              <div style={{ marginTop: 8 }}>
+                <h3 className="text-xl font-semibold mt-4 mb-2">Instructions</h3>
+                <p className="whitespace-pre-line">{selectedMeal.strInstructions}</p>
+              </div>
+            </div>
+          </div>
         ) : (
-          <p>No currency data</p>
+          <p>No detailed meal found for this country.</p>
         )}
-      </section>
-
-      {country.coatOfArms?.png && (
-        <img src={country.coatOfArms.png} alt={`${country.name?.common} coat of arms`} style={{ width: 120, marginTop: 12 }} />
-      )}
+</div>
+      </div>
 
       <hr style={{ margin: '16px 0' }} />
 
