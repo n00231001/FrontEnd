@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import SingleMeal from './SingleMeal';
 
 export default function SingleCountry() {
   const { name } = useParams();
@@ -161,13 +160,14 @@ export default function SingleCountry() {
   return (
     <>
     {/* back button */}
+    <div style={{ marginTop: '20px',marginLeft: '20px' }}>
     <Link to="/" className="btn btn-outline btn-primary mb-4">← Back</Link>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, backgroundColor: 'grey', padding: '20px', margin: '50px', borderRadius: '8px' }}>
+    </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, backgroundColor: '#162455', padding: '20px', marginLeft: '50px',marginRight: '50px', borderRadius: '8px', color: 'white' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
           {/* flags and coat of arms */}
           {country.flags?.png && (
-            <img src={country.flags.png} alt={`${country.name?.common} flag`} style={{ width: 380, objectFit: 'cover', color: 'red' }} />
+            <img src={country.flags.png} alt={`${country.name?.common} flag`} style={{ width: 380, objectFit: 'cover'}} />
           )}<br></br>
           {country.coatOfArms?.png && (
             <img src={country.coatOfArms.png} alt={`${country.name?.common} coat of arms`} style={{ width: 380 }} />
@@ -175,41 +175,46 @@ export default function SingleCountry() {
         </div>
         {/* country info */}
         <div>
-          <p>
-            <b>Name:</b> {country.name?.official || country.name?.common}
-          </p>
-          <p>
-            <b>Capital:</b> {Array.isArray(country.capital) ? country.capital.join(', ') : country.capital || '—'}
-          </p>
-          <p>
-            <b>Region:</b> {country.region || '—'}
-          </p>
-          <p>
-            <b>Population:</b> {country.population ? country.population.toLocaleString() : '—'}
-          </p>
+          <div style={{backgroundColor: '#101d4d', padding: '20px',borderRadius: '8px'}}>
+            <p>
+              <b>Name:</b> {country.name?.official || country.name?.common}
+            </p>
+            <p>
+              <b>Capital:</b> {Array.isArray(country.capital) ? country.capital.join(', ') : country.capital || '—'}
+            </p>
+            <p>
+              <b>Region:</b> {country.region || '—'}
+            </p>
+            <p>
+              <b>Population:</b> {country.population ? country.population.toLocaleString() : '—'}
+            </p>
+            </div>
           <div>
           <section>
             <br></br>
-            <h3>Currency</h3>
-            {currencyKeys.length ? (
-              currencyKeys.map((code) => {
-                const info = country.currencies[code] || {};
-                return (
-                  <p key={code}>
-                    <b>Code:</b> {code} <br />
-                    <b>Name:</b> {info.name || '—'} <br />
-                    <b>Symbol:</b> {info.symbol || '—'}
-                  </p>
-                );
-              })
-            ) : (
+            {/* currency section */}
+            <h1>Currency</h1>
+              <div style={{backgroundColor: '#101d4d', padding: '20px',borderRadius: '8px' }}>
+              {currencyKeys.length ? (
+                currencyKeys.map((code) => {
+                  const info = country.currencies[code] || {};
+                  return (
+                    <p key={code}>
+                      <b>Code:</b> {code} <br />
+                      <b>Name:</b> {info.name || '—'} <br />
+                      <b>Symbol:</b> {info.symbol || '—'}
+                    </p>
+                  );
+                })
+              ) : (
               <p>No currency data</p>
-            )}
+            )}</div>
           </section>
+          
         </div>
         </div>
         {/* single meal */}
-        <div>
+        <div style={{backgroundColor: '#101d4d', padding: '20px',borderRadius: '8px' }}>
         <h3>Meal</h3>
         {selectedMeal ? (
           <div className="card" style={{ padding: 8, maxWidth: 300 }}>
@@ -238,9 +243,9 @@ export default function SingleCountry() {
       {loadingMeals && <p>Loading meals...</p>}
       {!loadingMeals && meals.length === 0 && <p>No meals found for this country.</p>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginTop: 12 }}>
+      <div style={{ display: 'grid', marginLeft: '50px', marginRight: '50px', PaddingTop: '30px',  PaddingBottom: '30px',  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginTop: 12 }}>
         {meals.map((meal) => (
-          <div key={meal.idMeal} className="card" style={{ padding: 8 }}>
+          <div key={meal.idMeal} className="card" style={{ padding: '10px', background: '#101d4d' }}>
             <img src={meal.strMealThumb} alt={meal.strMeal} style={{ width: '100%', height: 120, objectFit: 'cover' }} />
             <div style={{ marginTop: 8 }}>
               <strong>{meal.strMeal}</strong>

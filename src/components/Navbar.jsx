@@ -15,8 +15,8 @@ const Navbar = ({ query = '', setQuery = () => {}, regionFilters = [], setRegion
   };
 
   return (
-    <div className=''>
-      <div className="flex w-full flex-col lg:flex-row">
+    <div className="navbar bg-base-200 mb-4 p-4 flex flex-col">
+      <div className="flex w-full flex-col lg:flex-row ">
         <Link to='/' >Home</Link>
           <div className="divider divider-horizontal" />
            <form className="form flex flex-nowrap items-center gap-2 overflow-x-auto" onSubmit={(e)=>e.preventDefault()}>

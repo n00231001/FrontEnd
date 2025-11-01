@@ -1,9 +1,8 @@
 import { Link } from 'react-router';
-import singleMeal from '../pages/SingleMeal.jsx';
  
  export default function CountryCard({ flagImg, name, capital }) {
    return (
-     <div className="card bg-base-100 shadow-sm w-full p-4 flex flex-row items-center gap-4">
+     <div className="card bg-[#162455] shadow-sm w-full p-2 flex flex-row items-center gap-4">
        {/* Flag section */}
        <Link to={`/country/${name}`} className="flex-shrink-0 w-32 h-20">
          <img
@@ -14,7 +13,7 @@ import singleMeal from '../pages/SingleMeal.jsx';
        </Link>
  
        {/* Info section */}
-       <div className="flex-1 bg-gray-400 text-zinc-800 p-4 rounded-md border border-red-200">
+       <div className="flex-1 text-white p-2 rounded-md">
          <p>
            <b>Name: </b>
            <Link
